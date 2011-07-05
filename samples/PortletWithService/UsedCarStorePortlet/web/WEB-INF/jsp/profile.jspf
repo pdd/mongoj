@@ -1,0 +1,39 @@
+
+<br />
+<table width="100%" border="0">
+	<tr>
+		<td width="70%">
+			<form id="profileForm">
+				<table border="0" cellpadding="10" cellspacing="10" width="75%">
+					<tr>
+						<td>
+							<label for="firstName">First Name</label><br />
+							<input id="firstName" type="text" size="15" /><br /><br />
+							<label for="lastName">Last Name</label><br />
+							<input id="lastName" type="text" size="15" /><br /><br />
+							<br /><br />
+							<i>All user attributes could be presented here...</i>
+							<br /><br />
+							<input type="button" value="Save" onClick="saveUser();" />
+						</td>
+					</tr>
+				</table>
+			</form>
+		</td>
+		<td width="30%" align="right"> <!-- Liked cars columm -->
+			<div id="likesContent"></div>		
+		</td>
+	</tr>
+</table>
+
+<script id="likesRowTemplate" type="text/html">
+	<table align="center" width="100%" border="0">
+		<tr>
+			<td align="right">
+				<img class="thumbnail" src="data:image/png;base64,%imageBinData%" alt="Thumbnail" />
+				&nbsp;&nbsp;&nbsp;
+				<input id="unlike" type="button" value="Unlike" onClick="unlikeCar('%vin%')" />
+			</td>
+		</tr>
+	</table>
+</script>

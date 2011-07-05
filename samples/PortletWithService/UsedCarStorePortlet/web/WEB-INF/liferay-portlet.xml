@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 5.2.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_5_2_0.dtd">
+<liferay-portlet-app>
+	  <portlet>
+		<portlet-name>UsedCarStorePortlet</portlet-name>
+		<instanceable>false</instanceable>
+		<header-portlet-css>http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css</header-portlet-css>
+		<header-portlet-css>/css/fileuploader.css</header-portlet-css>
+		<header-portlet-javascript>https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js</header-portlet-javascript>
+		<header-portlet-javascript>https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js</header-portlet-javascript>
+		<header-portlet-javascript>/js/fileuploader.js</header-portlet-javascript>
+		<footer-portlet-javascript>/js/usedcar.js</footer-portlet-javascript>
+	</portlet>
+</liferay-portlet-app>

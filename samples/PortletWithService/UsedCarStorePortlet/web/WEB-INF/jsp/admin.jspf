@@ -1,0 +1,181 @@
+	<br />
+	<form id="adminForm">
+		<label for="VIN"><font style="color: red;">VIN</font>*</label><br />
+		<input id="VIN" type="text" size="15" />
+		<br />
+		<div id="carAttrs" style="display: none;">
+		<div align="right">
+			<hr style="line-height: 1px;" />
+			<input type="button" value="Delete" onclick="deleteCar(); return false;">
+			&nbsp;&nbsp;
+			<input type="button" value="Save" onclick="saveCar(); return false;">
+		</div>
+		<table border="0" cellpadding="10" cellspacing="10" width="75%">
+		<tr>
+			<td>
+				<label for="make">Make</label><br />
+				<input id="make" type="text" size="15" /><br /><br />
+			</td>
+			<td>		
+				<label for="model">Model</label><br />
+				<input id="model" type="text" size="15" /><br /><br />
+			</td>
+			<td>
+				<label for="style">Style</label><br />
+				<input id="style" type="text" size="15" /><br /><br />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="year">Year</label><br />
+				<input id="year" type="text" size="15" /><br /><br />
+			</td>
+			<td>
+				<label for="mileage">Mileage</label><br />
+				<input id="mileage" type="text" size="15" /><br /><br />
+			</td>
+			<td>
+				<label for="color">Color</label><br />
+				<input id="color" type="text" size="15" /><br /><br />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="automatic">Automatic</label>&nbsp;
+				<input id="rd1" name="automatic" type="radio" value="true" checked="checked" />&nbsp;Yes
+				&nbsp;&nbsp;
+				<input id="rd2" name="automatic" type="radio" value="false" />&nbsp;No
+			</td>
+			<td>		
+				<label for="price">Price</label><br />
+				<input id="price" type="text" size="15" /><br /><br />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="photos-uploader">Photos</label><br />
+				<div id="photos-uploader">
+					<noscript>
+						<p>Enable JavaScript to use file uploader.</p>
+					</noscript>
+				</div>			
+			</td>
+			<td>
+				<label for="thumbnail">Thumbnail</label><br />
+				<div id="thumbnail-uploader">
+					<noscript>
+						<p>Enable JavaScript to use file uploader.</p>
+					</noscript>
+				</div>			
+			</td>
+			<td>
+				
+			</td>
+	</table>
+	
+	<hr style="line-height: 1px;" />
+	<b>History</b>	
+	<hr style="line-height: 1px;" />
+	<table border="0" cellpadding="10" cellspacing="10" width="75%">
+		<tr>
+			<td>Registration Info - 1
+				<table border="0" cellpadding="10" cellspacing="10" width="100%">
+					<tr>
+						<td>
+							<label for="regDate1">Registration Date</label><br />
+							<input id="regDate1" type="text" size="10" />
+
+						<td>
+						<td>
+							<label for="regMileage1">Mileage</label><br />
+							<input id="regMileage1" type="text" size="5" />
+
+						</td>
+						<td>
+							<label for="regState1">State</label><br />
+							<input id="regState1" type="text" size="2" />
+
+						</td>
+						<td>
+							<table border="0" cellpadding="10" cellspacing="10" width="100%">
+								<tr>
+									<td>
+										<label for="serviceDate11">Service Date</label><br />
+										<input id="serviceDate11" type="text" size="10" />
+									</td>
+									<td>
+										<label for="notes11">Notes</label><br /> 
+										<textarea id="notes11" ></textarea>									
+									</td>
+								</tr>							
+								<tr>
+									<td>
+										<label for="serviceDate12">Service Date</label><br />
+										<input id="serviceDate12" type="text" size="10" />
+									</td>
+									<td>
+										<label for="notes12">Notes</label><br /> 
+										<textarea id="notes12" ></textarea>									
+									</td>
+								</tr>							
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<hr style="line-height: 1em;" />
+			</td>
+		</tr>
+		<tr>
+			<td>Registration Info - 2
+				<table border="0" cellpadding="10" cellspacing="10" width="100%">
+					<tr>
+						<td>
+							<label for="regDate2">Registration Date</label><br />
+							<input id="regDate2" type="text" size="10" />
+
+						<td>
+						<td>
+							<label for="regMileage2">Mileage</label><br />
+							<input id="regMileage2" type="text" size="5" />
+
+						</td>
+						<td>
+							<label for="regState2">State</label><br />
+							<input id="regState2" type="text" size="2" />
+
+						</td>
+						<td>
+							<table border="0" cellpadding="10" cellspacing="10" width="100%">
+								<tr>
+									<td>
+										<label for="serviceDate21">Service Date</label><br />
+										<input id="serviceDate21" type="text" size="10" />
+									</td>
+									<td>
+										<label for="notes21">Notes</label><br /> 
+										<textarea id="notes21" ></textarea>									
+									</td>
+								</tr>							
+								<tr>
+									<td>
+										<label for="serviceDate22">Service Date</label><br />
+										<input id="serviceDate22" type="text" size="10" />
+									</td>
+									<td>
+										<label for="notes22">Notes</label><br /> 
+										<textarea id="notes22" ></textarea>									
+									</td>
+								</tr>							
+							</table>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	</div>
+	</form>

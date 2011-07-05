@@ -1,0 +1,143 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" 
+	name="used-car-store-portlet" basedir="." default="war">
+	<property environment="env" />
+	<loadproperties srcfile="${basedir}/build.properties" />
+
+	<property name="ivy.settings.dir" value="${basedir}/../../settings" />
+	
+	<ivy:settings file="${ivy.settings.dir}/ivysettings.xml" />
+
+	<condition property="debug" value="${env.DEBUG}" else="true">
+		<isset property="env.DEBUG"/>
+	</condition>
+
+	<property name="src.dir" location="src/java"/>
+	<property name="service.dir" location="${src.dir}/service"/>
+	<property name="service.impl.dir" location="${src.dir}/service-impl"/>
+	<property name="lib.dir" location="lib"/>
+	<property name="build.dir" location="build"/>
+	<property name="build.lib.dir" location="build/lib"/>
+	<property name="classes.dir" location="${build.dir}/classes"/>
+	
+	<property name="web-inf.classes.dir" location="web/WEB-INF/classes"/>
+	
+	<target name="init" depends="banner">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${classes.dir}"/>
+		<mkdir dir="${classes.dir}/service" />
+		<mkdir dir="${classes.dir}/service-impl" />
+	</target>
+
+	<target name="resolve" depends="init">
+		<ivy:retrieve type="jar, properties" sync="true"  />
+	</target>
+
+	<target name="clean-all" depends="clean, clean-cache" />
+
+	<target name="clean-cache">
+		<ivy:cleancache />
+	</target>
+	
+	<target name="deploy" depends="war">
+		<copy todir="${deploy.dir}">
+			<fileset file="${build.dir}/usedcarstoreportlet.war" />
+		</copy>
+	</target>
+	
+	<target name="war" depends="jar">
+		<copy todir="${build.dir}/web">
+			<fileset dir="web" />
+		</copy>
+		<copy todir="${build.dir}/web/WEB-INF/lib">
+			<fileset dir="${build.lib.dir}" />
+			<fileset file="${lib.dir}/mongo-java-driver-2.5.3.jar" />
+			<fileset file="${lib.dir}/mongoj-0.1.jar" />
+			<fileset file="${lib.dir}/slf4j-api-1.6.1.jar" />
+			<fileset file="${lib.dir}/slf4j-simple-1.6.1.jar" />
+			<fileset file="${lib.dir}/commons-lang-2.6.jar" />
+			<fileset file="${lib.dir}/jackson-core-asl-1.8.0.jar" />
+			<fileset file="${lib.dir}/jackson-mapper-asl-1.8.0.jar" />
+			<fileset file="${lib.dir}/json-20090211.jar" />
+			<fileset file="${lib.dir}/commons-codec-1.5.jar" />
+		</copy>
+		<war destfile="${build.dir}/usedcarstoreportlet.war" basedir="${build.dir}/web">
+			<classes dir="${classes.dir}"/>
+		</war>		
+	</target>
+
+	<target name="jar" depends="compile">
+		<zip zipfile="${build.lib.dir}/usedcar-service.jar">
+			<zipfileset dir="${classes.dir}/service"/>
+		</zip>
+
+		<zip zipfile="${build.lib.dir}/usedcar-service-impl.jar">
+			<zipfileset dir="${classes.dir}/service-impl"/>
+			<zipfileset file="${src.dir}/service-impl/service.properties" />
+			<zipfileset file="${src.dir}/service-impl/indexes.properties" />
+		</zip>
+	</target>
+	
+	<target name="compile" depends="compile-service-impl">
+		<javac includeantruntime="false" 
+			srcdir="${src.dir}"
+			destdir="${classes.dir}"
+			debug="${debug}">
+			<classpath>
+				<pathelement location="${classes.dir}/service"/>
+				<pathelement location="${classes.dir}/service-impl"/>
+				<pathelement location="${classes.dir}/service"/>
+				<fileset dir="${lib.dir}" includes="*.jar"/>				
+				<fileset file="${tomcat.dir}/lib/*.jar" />
+				<fileset file="${tomcat.dir}/lib/ext/*.jar" />
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="compile-service-impl" depends="compile-service">
+		<javac srcdir="${src.dir}/service-impl" 
+			destdir="${classes.dir}/service-impl"
+			debug="${debug}" 
+			includeantruntime="false">
+			<classpath>
+				<pathelement location="${classes.dir}/service"/>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+				<fileset dir="${tomcat.dir}/lib/ext" includes="*.jar" />
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="compile-service" depends="resolve">
+		<javac srcdir="${src.dir}/service" 
+			destdir="${classes.dir}/service"
+			debug="${debug}" 
+			includeantruntime="false">
+			<classpath>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="build-service" depends="resolve">
+		<java classname="org.mongoj.tools.ServiceBuilder" fork="true" 
+			maxmemory="256m" newenvironment="true">
+			<jvmarg value="-Dservice.file.name=src/conf/service.json"/>
+			<jvmarg value="-Dservice.api.dir=${service.dir}"/>
+			<jvmarg value="-Dservice.impl.dir=${service.impl.dir}"/>
+			<jvmarg value="-Dservice.spring.file=${web-inf.classes.dir}/META-INF/spring.xml"/>
+			<jvmarg value="-Dservice.indexer.file=src/conf/indexer.js"/>
+			<jvmarg value="-Dliferay.service=true"/>
+
+			<classpath>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="clean" depends="banner">
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<target name="banner">
+		<echo>*** ${basedir} ***</echo>
+	</target>
+</project>

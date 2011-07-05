@@ -1,0 +1,194 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" 
+	name="user-car-service" basedir="." default="war">
+
+	<property environment="env" />
+	
+	<property name="ivy.settings.dir" value="${basedir}/../settings" />
+	
+	<ivy:settings file="${ivy.settings.dir}/ivysettings.xml" />
+
+	<condition property="debug" value="${env.DEBUG}" else="true">
+		<isset property="env.DEBUG"/>
+	</condition>
+
+	<property name="src.dir" location="src/java"/>
+	<property name="service.dir" location="${src.dir}/service"/>
+	<property name="service.impl.dir" location="${src.dir}/service-impl"/>
+	<property name="lib.dir" location="lib"/>
+	<property name="build.dir" location="build"/>
+	<property name="build.lib.dir" location="build/lib"/>
+	<property name="classes.dir" location="${build.dir}/classes"/>	
+	<property name="web-inf.classes.dir" location="web/WEB-INF/classes"/>
+
+	<target name="init" depends="banner">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${classes.dir}"/>
+		<mkdir dir="${classes.dir}/service" />
+		<mkdir dir="${classes.dir}/service-impl" />
+	</target>
+
+	<target name="resolve" depends="init">
+		<ivy:retrieve type="jar,properties" sync="true"  />
+	</target>
+
+	<target name="clean-all" depends="clean, clean-cache" />
+
+	<target name="clean-cache">
+		<ivy:cleancache />
+	</target>
+	
+	<target name="process-platform" depends="process-liferay, process-servletContainer"/>
+
+	<target name="process-liferay" if="env.liferay_service">
+		<property name="liferay.service" value="true" />
+		<property name="web.xml" value="src/conf/liferay-web.xml" />
+		<property name="deploy.lib.dir" value="${env.tomcat_dir}/lib/ext" />
+	    <path id="cp">
+	    	<fileset dir="${env.tomcat_dir}/lib/ext" includes="portal-service.jar"/>
+	    </path>
+	</target>
+
+	<target name="process-servletContainer" unless="env.liferay_service">
+		<property name="liferay.service" value="false" />
+		<property name="web.xml" value="src/conf/web.xml" />
+		<property name="deploy.lib.dir" value="${env.tomcat_dir}/lib" />
+	    <path id="cp">
+	    </path>
+	</target>
+	
+	<target name="check-deploy-properties">
+		<fail unless="env.tomcat_dir">.
+			
+			Environment property "tomcat_dir" is not set.
+			export tomcat_dir=&lt;path-to-apache-tomcat-6.0.32&gt; and then run deploy again.
+			
+		</fail>
+		<fail unless="env.deploy_dir">.
+			
+			Environment property "deploy_dir" is not set.
+			export deploy_dir=&lt;path-to-deploy-dir&gt; and then run deploy again.
+			If using just tomcat server, this is typically &lt;...&gt;/apache-tomcat-6.0.32/webapps.
+			If using Liferay, this would be the Liferay deploy dir which is typically &lt;...&gt;/liferay-portal-6.0.6/deploy.
+			
+		</fail>
+	</target>
+	
+	<target name="deploy" depends="war">
+		<copy todir="${deploy.lib.dir}">
+			<fileset file="${lib.dir}/mongo-java-driver-2.5.3.jar" />
+			<fileset file="${lib.dir}/mongoj-0.1.jar" />
+			<fileset file="${lib.dir}/slf4j-api-1.6.1.jar" />
+			<fileset file="${lib.dir}/slf4j-simple-1.6.1.jar" />
+			<fileset file="${lib.dir}/commons-lang-2.6.jar" />
+			<fileset file="${build.lib.dir}/usedcar-service.jar" />
+		</copy>
+		<copy todir="${env.deploy_dir}">
+			<fileset file="${build.dir}/usedcarservice-web.war" />
+		</copy>
+	</target>
+	
+	<target name="war" depends="jar">
+		<copy todir="${build.dir}/web">
+			<fileset dir="web" />
+		</copy>
+		<copy tofile="${build.dir}/web/WEB-INF/web.xml">
+			<fileset file="${web.xml}" />
+		</copy>
+		<copy todir="${build.dir}/web/WEB-INF/lib">
+			<fileset file="${lib.dir}/commons-logging-1.1.1.jar" />
+			<fileset file="${lib.dir}/com.springsource.org.aopalliance-1.0.0.jar" />
+			<fileset file="${lib.dir}/com.springsource.org.apache.commons.logging-1.1.1.jar" />			
+			<fileset file="${lib.dir}/org.springframework.aop-3.0.5.RELEASE.jar" />
+			<fileset file="${lib.dir}/org.springframework.asm-3.0.5.RELEASE.jar" />
+			<fileset file="${lib.dir}/org.springframework.beans-3.0.5.RELEASE.jar" />
+			<fileset file="${lib.dir}/org.springframework.context-3.0.5.RELEASE.jar" />
+			<fileset file="${lib.dir}/org.springframework.core-3.0.5.RELEASE.jar" />
+			<fileset file="${lib.dir}/org.springframework.expression-3.0.5.RELEASE.jar" />
+			<fileset file="${lib.dir}/spring-web-3.0.5.RELEASE.jar" />			
+			<fileset file="${lib.dir}/log4j-1.2.15.jar" />
+			<fileset file="${build.lib.dir}/usedcar-service-impl.jar" />
+		</copy>		
+		<war destfile="${build.dir}/usedcarservice-web.war" basedir="${build.dir}/web">
+		</war>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<copy file="src/conf/mongoj-ext.properties" todir="${classes.dir}/service"/>
+		<zip zipfile="${build.lib.dir}/usedcar-service.jar">
+			<zipfileset dir="${classes.dir}/service"/>
+		</zip>
+
+		<zip zipfile="${build.lib.dir}/usedcar-service-impl.jar">
+			<zipfileset dir="${classes.dir}/service-impl"/>
+			<zipfileset file="${src.dir}/service-impl/service.properties" />
+			<zipfileset file="${src.dir}/service-impl/indexes.properties" />
+		</zip>
+	</target>
+	
+	<target name="compile" depends="compile-service-impl">
+		<copy file="${service.impl.dir}/indexes.properties" todir="${classes.dir}/service-impl"/>
+		<javac includeantruntime="false" 
+			srcdir="${src.dir}"
+			destdir="${classes.dir}/service"
+			debug="${debug}">
+			<classpath>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+				<pathelement location="${classes.dir}"/>
+				<path refid="cp" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="compile-service-impl" depends="compile-service">
+		<javac srcdir="${src.dir}/service-impl" 
+			destdir="${classes.dir}/service-impl"
+			debug="${debug}" 
+			includeantruntime="false">
+			<classpath>
+				<pathelement location="${classes.dir}/service"/>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+				<path refid="cp" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="compile-service" depends="resolve">
+		<javac srcdir="${src.dir}/service" 
+			destdir="${classes.dir}/service"
+			debug="${debug}" 
+			includeantruntime="false">
+			<classpath>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="build-service" depends="resolve">
+		<java classname="org.mongoj.tools.ServiceBuilder" fork="true" 
+			maxmemory="256m" newenvironment="true">
+			<jvmarg value="-Dservice.file.name=src/conf/service.json"/>
+			<jvmarg value="-Dservice.api.dir=${service.dir}"/>
+			<jvmarg value="-Dservice.impl.dir=${service.impl.dir}"/>
+			<jvmarg value="-Dservice.spring.file=${web-inf.classes.dir}/META-INF/spring.xml"/>
+			<jvmarg value="-Dservice.indexer.file=src/conf/indexer.js"/>
+			<jvmarg value="-Dliferay.service=${liferay.service}"/>
+
+			<classpath>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+			</classpath>
+		</java>
+	</target>
+
+	<target name="clean" depends="banner">
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<target name="banner" depends="process-platform">
+		<echo>*** ${basedir} ***</echo>
+		<echo>Evironment variable "tomcat_dir" = ${env.tomcat_dir}</echo>
+		<echo>Evironment variable "deploy_dir" = ${env.deploy_dir}</echo>
+		<echo>Evironment variable "liferay_service" = ${liferay.service}</echo>
+		<property name="cp" refid="cp"/>
+		<echo>Container specific cp = ${cp}</echo>
+	</target>
+</project>

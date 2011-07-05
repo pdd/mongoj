@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans
+	default-destroy-method="destroy"
+	default-init-method="afterPropertiesSet"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+>
+	<context:annotation-config/>
+
+	<bean id="org.mongoj.db.DBFactory" class="org.mongoj.db.DBFactoryImpl">
+		<property name="propertiesFile" value="mongoj-ext.properties" />
+	</bean>
+	<bean id="org.mongoj.DBFactoryUtil" class="org.mongoj.db.DBFactoryUtil">
+		<property name="DBFactory" ref="org.mongoj.db.DBFactory" />
+	</bean>
+	<bean id="org.mongoj.BasePersistence" abstract="true">
+		<property name="DBFactory" ref="org.mongoj.db.DBFactory" />
+	</bean>
+	<bean id="org.mongoj.samples.service.CarLocalService" class="org.mongoj.samples.service.impl.CarLocalServiceImpl" />
+	<bean id="org.mongoj.samples.service.CarLocalServiceUtil" class="org.mongoj.samples.service.CarLocalServiceUtil">
+		<property name="service" ref="org.mongoj.samples.service.CarLocalService" />
+	</bean>
+	<bean id="org.mongoj.samples.service.persistence.CarPersistence" class="org.mongoj.samples.service.persistence.CarPersistenceImpl" parent="org.mongoj.BasePersistence" />
+	<bean id="org.mongoj.samples.service.UserLocalService" class="org.mongoj.samples.service.impl.UserLocalServiceImpl" />
+	<bean id="org.mongoj.samples.service.UserLocalServiceUtil" class="org.mongoj.samples.service.UserLocalServiceUtil">
+		<property name="service" ref="org.mongoj.samples.service.UserLocalService" />
+	</bean>
+	<bean id="org.mongoj.samples.service.persistence.UserPersistence" class="org.mongoj.samples.service.persistence.UserPersistenceImpl" parent="org.mongoj.BasePersistence" />
+</beans>

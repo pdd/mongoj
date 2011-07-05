@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-simple-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-asl-1.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-mapper-asl-1.8.0.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/JVM Contents (MacOS X Default)"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="lib/freemarker-2.3.16.jar"/>
+	<classpathentry kind="lib" path="lib/jalopy-1.5rc3.jar"/>
+	<classpathentry kind="lib" path="lib/mongo-java-driver-2.5.3.jar"/>
+	<classpathentry kind="lib" path="lib/qdox-1.12.jar"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>

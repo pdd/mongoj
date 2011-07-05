@@ -1,0 +1,8 @@
+.DS_Store
+build/
+lib
+test/src/java/service-impl
+test/src/java/service
+ServiceBuilder.temp
+liferay-portal-6.0.6
+apache-tomcat-6.0.32

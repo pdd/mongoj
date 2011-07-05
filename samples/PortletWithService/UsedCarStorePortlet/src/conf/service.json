@@ -1,0 +1,214 @@
+{
+	"author" : "Prashant Dighe",
+	"package" : "org.mongoj.samples",
+	 
+	"documents" : [
+		{	"name" :  "Car",
+			"collection" : "cars",
+			"fields" :  [
+				{	
+					"name" : "make",
+				 	"type" : "String"
+				},
+				{ 	
+					"name" : "model",
+					"type" : "String"
+				},
+				{	
+					"name" : "style",
+					"type" : "String"
+				},
+				{
+					"name" : "year",
+					"type" : "int"
+				},
+				{
+					"name" : "mileage",
+					"type" : "int"
+				},
+				{
+					"name" : "color",
+					"type" : "String"
+				},
+				{
+					"name" : "photos",
+					"type" : "List<byte[]>"
+				},				
+				{
+					"name" : "thumbnail",
+					"type" : "byte[]"
+				},
+				{
+					"name" : "automatic",
+					"type" : "boolean"
+				},
+				{
+					"name" : "VIN",
+					"type" : "String"
+				},
+				{
+					"name" : "price",
+					"type" : "double"
+				},
+				{
+					"name" : "history",
+					"type" : "List<RegInfo>",
+					"fields" : [
+						{
+							"name" : "regDate",
+							"type" : "Date"
+						},
+						{
+							"name" : "mileage",
+							"type" : "int"
+						},
+						
+						{
+							"name" : "state",
+							"type" : "String"
+						},
+						{
+							"name" : "serviceRecord",
+							"type" : "List<ServiceDetails>",
+							"fields" : [
+								{
+									"name" : "serviceDate",
+									"type" : "Date"
+								},
+								{
+									"name" : "notes",
+									"type" : "String"
+								}				
+							]
+						}
+					]
+				},
+				{
+					"name" : "likes",
+					"type" : "int"
+				}
+			],
+			"finders" : [
+				{
+					"name" : "VIN",
+					"returnType" : "Car",
+					"finderFields" : [
+				 		"VIN"
+				 	]
+				},
+				{
+					"name" : "Make",
+					"returnType" : "Collection",
+					"finderFields" :  [
+				 		"make"
+				 	]
+				}
+			],
+			"uniqueKeys" : [
+				["VIN"]
+			]		
+		},
+		{	"name" :  "User",
+			"collection" : "testuser",
+			"fields" : [
+				{	
+					"name" : "userId",
+				 	"type" : "long"
+				},
+				{	
+					"name" : "firstName",
+				 	"type" : "String"
+				},
+				{	
+					"name" : "lastName",
+				 	"type" : "String"
+				},
+				{
+					"name" : "password",
+					"type" : "String" 
+				},
+				{
+					"name" : "active",
+					"type" : "boolean"
+				},
+				{
+					"name" : "image",
+					"type" : "byte[]"						
+				},
+				{
+					"name" : "info",
+					"type" : "Object",
+					"fields" : [
+						{
+							"name" : "dob",
+							"type" : "Date"
+						},
+						{	"name" : "address",
+						 	"type" : "Object",
+							"fields" : [
+								{
+									"name" : "street",
+									"type" : "String"
+								},
+								{
+									"name" : "zip",
+									"type" : "int"
+								}
+							]
+						},
+						{
+							"name" : "phone",
+							"type" : "String"
+						},
+						{ 	
+							"name" : "reminders",
+							"type" : "List<Date>"
+						}
+					]
+				},
+				{ 	"name" : "likedCars",
+					"type" : "List<String>"
+				},
+				{	"name" : "followedUsers",
+					"type" : "List<String>"
+				}
+			],
+			"finders" : [
+				{
+					"name" : "UserId",
+					"returnType" : "User",
+					"finderFields" : [
+						"userId"
+					]
+				},
+				{
+					"name" : "LastName",
+					"returnType" : "User",
+					"finderFields" : [
+						"lastName"
+					]
+				},
+				{
+					"name" : "FN_LN",
+					"returnType" : "User",
+					"finderFields" : [
+						"firstName",
+						"lastName"
+					]
+				},
+				{
+					"name" : "FN_DOB",
+					"returnType" : "Collection",
+					"finderFields" : [
+				 		"firstName",
+				 		"info.dob"
+				 	]
+				}
+			],
+			"uniqueKeys" : [
+				["userId"],
+				["firstName", "info.phone"]
+			]		
+		}
+	]
+}

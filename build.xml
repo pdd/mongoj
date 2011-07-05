@@ -1,0 +1,82 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="mongoj" 
+	basedir="." default="jar">
+	
+	<property environment="env" />
+	
+	<property name="ivy.settings.dir" value="${basedir}/settings" />
+	<ivy:settings file="${ivy.settings.dir}/ivysettings.xml" />
+	
+	<condition property="debug" value="${env.DEBUG}" else="true">
+		<isset property="env.DEBUG"/>
+	</condition>
+	
+	<property name="src.dir" location="src/java"/>
+	<property name="conf.dir" location="src/conf"/>
+	<property name="lib.dir" location="lib"/>
+	<property name="build.dir" location="build"/>
+	<property name="build.lib.dir" location="${build.dir}/lib"/>
+	<property name="classes.dir" location="${build.dir}/classes"/>
+
+	<target name="init" depends="banner">
+		<mkdir dir="${lib.dir}"/>
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${classes.dir}"/>
+		<mkdir dir="${build.lib.dir}"/>
+	</target>
+	
+	<target name="resolve" depends="init">
+		<ivy:retrieve type="jar" />
+	</target>
+	
+	<target name="report" depends="resolve">
+		<ivy:report todir="${build.dir}"/>
+	</target>
+	
+	<target name="clean-cache">
+		<ivy:cleancache />
+	</target>
+	
+	<target name="clean-lib">
+		<delete dir="${lib.dir}"/>
+	</target>
+		
+	<target name="publish-local" depends="jar"> 
+		<ivy:publish resolver="local" pubrevision="0.1" overwrite="true">
+			<artifacts pattern="${build.lib.dir}/[artifact].[ext]" />
+		</ivy:publish>
+	</target>
+		
+	<target name="jar" depends="compile">
+		<copy todir="${build.lib.dir}">
+			<fileset file="${conf.dir}/mongoj-ext.properties" />
+		</copy>
+		<jar destfile="${build.lib.dir}/mongoj.jar">
+			<fileset dir="${classes.dir}">
+				<exclude name="tools/**" />
+			</fileset>
+			<fileset dir="${conf.dir}" includes="mongoj.properties" />
+		</jar>
+		<jar destfile="${build.lib.dir}/mongoj-tools.jar">
+			<fileset dir="${conf.dir}"
+				excludes="mongoj.properties,mongoj-ext.properties" />
+			<fileset dir="${classes.dir}"/>
+		</jar>
+	</target>
+	
+	<target name="compile" depends="resolve">
+		<javac includeantruntime="false" 
+			srcdir="src/java" destdir="${classes.dir}" debug="${debug}">
+			<classpath>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="clean" depends="banner">
+		<delete dir="${build.dir}"/>
+	</target>
+	
+	<target name="banner">
+		<echo>*** ${basedir} ***</echo>
+	</target>
+</project>

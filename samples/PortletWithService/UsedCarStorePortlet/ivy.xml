@@ -1,0 +1,40 @@
+<ivy-module version="2.0">
+	<info organisation="org.mongoj" module="saamples" />
+
+	<configurations>
+		<conf name="sources" />
+		<conf name="compile" />
+		<conf name="runtime" />
+	</configurations>
+
+	<dependencies>
+		<dependency org="org.mongoj" name="mongoj" rev="0.1" transitive="false" changing="true" />
+		<dependency org="org.mongoj" name="mongoj-ext" rev="0.1" transitive="false" changing="true">
+			<artifact name="mongoj-ext" type="properties" />
+		</dependency>
+		<dependency org="org.mongoj" name="mongoj-tools" rev="0.1" transitive="false" changing="true" />
+		<dependency org="commons-lang" name="commons-lang" rev="2.6" conf="*->*,!sources,!javadoc" transitive="false" />
+		<dependency org="commons-logging" name="commons-logging" rev="1.1.1" conf="*->*,!sources,!javadoc" transitive="false" />
+		<dependency org="jalopy" name="jalopy" rev="1.5rc3" conf="*->*,!sources,!javadoc" transitive="false" />
+		<dependency org="com.thoughtworks.qdox" name="qdox" rev="1.12" conf="*->*,!sources,!javadoc" transitive="false" />
+		<dependency org="org.freemarker" name="freemarker" rev="2.3.16" conf="*->*,!sources,!javadoc" transitive="false" />
+		<dependency org="org.codehaus.jackson" name="jackson-core-asl" rev="1.8.0" conf="*->*,!sources,!javadoc" transitive="false" />
+		<dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.8.0" conf="*->*,!sources,!javadoc" transitive="false" />
+		<dependency org="org.mongodb" name="mongo-java-driver" rev="2.5.3" conf="*->*,!sources,!javadoc" transitive="false" />
+		<dependency org="org.slf4j" name="slf4j-api" rev="1.6.1" conf="*->*,!sources,!javadoc" transitive="false" />
+		<dependency org="org.slf4j" name="slf4j-simple" rev="1.6.1" conf="*->*,!sources,!javadoc" transitive="false" />
+		<dependency org="org.springframework" name="org.springframework.beans" rev="3.0.5.RELEASE" conf="runtime" transitive="false" >
+			<exclude name="notice"/>
+			<exclude name="license"/>
+		</dependency>
+		<dependency org="org.springframework" name="org.springframework.context" rev="3.0.5.RELEASE" conf="runtime" >
+			<exclude name="notice"/>
+			<exclude name="license"/>
+		</dependency>
+		<dependency org="org.springframework" name="spring-web" rev="3.0.5.RELEASE" transitive="false"/>
+		<dependency org="log4j" name="log4j" rev="1.2.15" conf="*->*,!sources,!javadoc" transitive="false" />
+		<dependency org="javax.servlet" name="servlet-api" rev="2.5"/>
+		<dependency org="org.json" name="json" rev="20090211"/>
+		<dependency org="commons-codec" name="commons-codec" rev="1.5"/>
+	</dependencies>
+</ivy-module>

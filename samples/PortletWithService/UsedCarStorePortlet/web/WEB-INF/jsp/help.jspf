@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+  </head>
+  <body>
+    <h2>
+      How to test</h2>
+    Remember...this is just a sample.<br>
+    <ol>
+      <li>Start mongoDB with all defaults</li>
+      <li>Makde sure you add this portlet to a private page or else
+        access it as any authenticated user<br>
+      </li>
+      <li>Select Admin tab</li>
+      <li>Enter any random string as VIN</li>
+      <li>Fill out the form and save</li>
+      <ul>
+        <li>Connect to "test" db of mongodb</li>
+      </ul>
+      <ul>
+        <li>You should see "cars" collection with the car entry in
+          mongodb</li>
+      </ul>
+      <li>Enter as many new cars as you want</li>
+      <li>If you enter an existing VIN, then you may edit the data
+        entered earlier<br>
+      </li>
+      <li>Select "Store" tab and see the cars <br>
+      </li>
+      <li>Click on "Like"</li>
+      <ul>
+        <li>Verify in mongoDB that the "likedCars" array is filled with
+          the VINs for the cars you have liked<br>
+        </li>
+      </ul>
+      <li>Select "My Profile" tab and see the cars you have liked&nbsp;</li>
+      <ul>
+        <li>At this point, you may verify in mongoDB that a user is
+          created in "testuser" collection<br>
+        </li>
+      </ul>
+      <li>You may enter first and last name and save to see your changes
+        in mongoDB</li>
+      <li>Unlike a car and verify in mongoDB that it has been removed
+        from the "likedCars" array in the user entry.<br>
+      </li>
+    </ol>
+    <br>
+    <br>
+  </body>
+</html>

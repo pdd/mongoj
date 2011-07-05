@@ -1,0 +1,202 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" 
+	name="test-mongoj" basedir="." default="run">
+	<property environment="env" />
+
+	<property name="ivy.settings.dir" value="${basedir}/settings" />
+	<ivy:settings file="${ivy.settings.dir}/ivysettings.xml" />
+
+	<condition property="debug" value="${env.DEBUG}" else="true">
+		<isset property="env.DEBUG"/>
+	</condition>
+
+	<property name="src.dir" location="src/java"/>
+	<property name="service.dir" location="${src.dir}/service"/>
+	<property name="service.impl.dir" location="${src.dir}/service-impl"/>
+	<property name="lib.dir" location="lib"/>
+	<property name="build.dir" location="build"/>
+	<property name="classes.dir" location="${build.dir}/classes"/>
+	<property name="junit.out.dir.xml" location="${build.dir}/junit/xml"/>
+	<property name="junit.out.dir.html" location="${build.dir}/junit/html"/>
+
+	<target name="init" depends="banner">
+		<mkdir dir="${lib.dir}"/>
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${classes.dir}"/>
+	</target>
+
+	<target name="resolve" depends="init">
+		<!-- ivy:retrieve pattern="${lib.dir}/[type]/[artifact]-[revision].[ext]" conf="runtime" / -->
+		<ivy:retrieve type="jar" />
+	</target>
+
+	<target name="clean-all" 
+		depends="clean, clean-generated, clean-cache, clean-lib" />
+
+	<target name="clean-cache">
+		<ivy:cleancache />
+	</target>
+
+	<target name="clean-lib">
+		<delete dir="${lib.dir}"/>
+	</target>
+
+	<target name="test" depends="compile">
+		<condition property="case" value="${case}" else="**/*Test">
+			<isset property="${case}"/>
+		</condition>
+		<echo>Executing ${case}</echo>
+		
+		<mkdir dir="${junit.out.dir.xml}" />
+		<junit printsummary="yes" haltonfailure="no" showoutput="yes">
+			<classpath>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+				<pathelement path="${classes.dir}" />
+			</classpath>
+
+			<batchtest fork="yes" todir="${junit.out.dir.xml}">
+				<formatter type="xml" />
+				<fileset dir="${src.dir}">
+					<include name="**/${case}.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="test-report" depends="test">
+		<mkdir dir="${junit.out.dir.html}" />
+		<junitreport todir="${junit.out.dir.html}">
+			<fileset dir="${junit.out.dir.xml}">
+				<include name="*.xml" />
+			</fileset>
+			<report format="frames" todir="${junit.out.dir.html}" />
+		</junitreport>
+	</target>
+
+	<target name="debug" depends="compile">
+		<condition property="case" value="${case}" else="**/*Test">
+			<isset property="${case}"/>
+		</condition>
+		<echo>Debugging ${case}</echo>
+		
+		<junit haltonfailure="no" showoutput="yes">
+			<jvmarg value="-Xdebug" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y"/>
+			<classpath>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+				<pathelement path="${classes.dir}" />
+			</classpath>
+
+			<batchtest fork="yes">
+				<fileset dir="${src.dir}">
+					<include name="**/${case}.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="compile" depends="compile-service-impl">
+		<copy file="src/conf/META-INF/spring.xml" todir="${classes.dir}"/>
+		<copy file="src/conf/mongoj-ext.properties" todir="${classes.dir}"/>
+		<copy file="${service.impl.dir}/indexes.properties" todir="${classes.dir}"/>
+		<javac includeantruntime="false" 
+			srcdir="${src.dir}"
+			destdir="${classes.dir}"
+			excludes="service/**, service-impl/**, custom/**"
+			debug="on">
+			<classpath>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+				<pathelement location="${classes.dir}"/>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="build-service" depends="resolve">
+		<java classname="org.mongoj.tools.ServiceBuilder" fork="true" 
+			maxmemory="256m" newenvironment="true">
+			<jvmarg value="-Dservice.file.name=src/conf/service.json"/>
+			<jvmarg value="-Dservice.api.dir=${service.dir}"/>
+			<jvmarg value="-Dservice.impl.dir=${service.impl.dir}"/>
+			<jvmarg value="-Dservice.spring.file=src/conf/META-INF/spring.xml"/>
+			<jvmarg value="-Dservice.indexer.file=src/conf/indexer.js"/>
+			<jvmarg value="-Dliferay.service=false"/>
+
+			<classpath>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+			</classpath>
+		</java>
+
+		<!-- delete file="ServiceBuilder.temp"/ -->
+	</target>
+
+	<target name="build-service-with-custom-impls"> 
+		<antcall target="copy-custom-impls" />
+		<antcall target="build-service" />
+	</target>
+		
+	<target name="copy-custom-impls">
+		<copy todir="${service.impl.dir}/com/example/demo/service/impl" 
+			overwrite="true">
+			<fileset dir="${src.dir}/custom/com/example/demo/service/impl" />
+		</copy>
+		<copy todir="${service.impl.dir}/com/example/demo/model/impl" 
+			overwrite="true">
+			<fileset dir="${src.dir}/custom/com/example/demo/model/impl" />
+		</copy>
+		<copy todir="${service.impl.dir}/com/example/demo/model" 
+			overwrite="true">
+			<fileset file="${src.dir}/custom/com/example/demo/model/RegisteredDriver.java" />
+		</copy>
+	</target>
+
+	<target name="compile-service" depends="resolve">
+		<javac srcdir="${src.dir}/service" destdir="${classes.dir}"
+			debug="${debug}" includeantruntime="false">
+			<classpath>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+				<pathelement path="../mongoj/build/lib/mongoj.jar"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="compile-service-impl" depends="compile-service">
+		<javac srcdir="${src.dir}/service-impl" destdir="${classes.dir}"
+			debug="${debug}" includeantruntime="false">
+			<classpath>
+				<pathelement location="${classes.dir}"/>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+				<pathelement path="../mongoj/build/lib/mongoj.jar"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="clean" depends="banner">
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<target name="backup-custom-impls">
+		<copy todir="${src.dir}/custom/com/example/demo/service/impl" 
+			failonerror="no" overwrite="true"> 
+			<fileset dir="${service.impl.dir}/com/example/demo/service/impl" />
+		</copy>
+		<copy todir="${src.dir}/custom/com/example/demo/model/impl" 
+			failonerror="no" overwrite="true"> 
+			<fileset dir="${service.impl.dir}/com/example/demo/model/impl">
+				<exclude name="**ModelImpl.java"/>
+			</fileset>
+		</copy>
+		<copy todir="${src.dir}/custom/com/example/demo/model" 
+			failonerror="no" overwrite="true">
+			<fileset file="${service.dir}/com/example/demo/model/RegisteredDriver.java" />
+		</copy>
+	</target>
+	
+	<target name="clean-generated" depends="banner">
+		<delete dir="${service.dir}"/>
+		<delete dir="${service.impl.dir}"/>
+		<delete file="src/conf/META-INF/spring.xml"/>
+	</target>
+
+	<target name="banner">
+		<echo>*** ${basedir} ***</echo>
+	</target>
+</project>

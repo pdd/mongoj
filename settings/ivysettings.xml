@@ -1,0 +1,30 @@
+<ivysettings>
+	<property name="ivy.local.default.root" value="${ivy.default.ivy.user.dir}/local" override="false"/>
+	<property name="ivy.local.default.ivy.pattern" value="[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" override="false"/>
+	<property name="ivy.local.default.artifact.pattern" value="[organisation]/[module]/[revision]/[type]s/[artifact].[ext]" override="false"/>
+	
+	<settings defaultResolver="chain-following" />
+
+	<resolvers>
+		<filesystem name="local">
+			<ivy pattern="${ivy.local.default.root}/[organisation]/ivy-[revision].xml" />
+			<artifact pattern="${ivy.local.default.root}/[organisation]/[artifact]-[revision].[ext]" />
+		</filesystem>
+
+		<chain name="chain-following" returnFirst="true">
+			<url name="com.springsource.repository.bundles.release">
+				<ivy pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+				<artifact pattern="http://repository.springsource.com/ivy/bundles/release/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+			</url>
+
+			<url name="com.springsource.repository.bundles.external">
+				<ivy pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+				<artifact pattern="http://repository.springsource.com/ivy/bundles/external/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+			</url>
+
+			<ibiblio name="ibiblio" m2compatible="true" />
+		</chain>
+
+	</resolvers>
+
+</ivysettings>

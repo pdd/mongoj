@@ -1,0 +1,77 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" 
+	name="user-car-store" basedir="." default="war">
+	<property environment="env" />
+
+	<property name="ivy.settings.dir" value="${basedir}/../settings" />
+	
+	<ivy:settings file="${ivy.settings.dir}/ivysettings.xml" />
+
+	<condition property="debug" value="${env.DEBUG}" else="true">
+		<isset property="env.DEBUG"/>
+	</condition>
+
+	<property name="src.dir" location="src/java"/>
+	<property name="lib.dir" location="lib"/>
+	<property name="build.dir" location="build"/>
+	<property name="classes.dir" location="${build.dir}/classes"/>
+	<property name="web-inf.classes.dir" location="web/WEB-INF/classes"/>
+
+	<target name="check-deploy-properties">
+		<fail unless="env.tomcat_dir">.
+			
+			Environment property "tomcat_dir" is not set.
+			export tomcat_dir=&lt;path-to-apache-tomcat-6.0.32&gt; and then run deploy again.
+			
+		</fail>
+	</target>
+
+	<target name="init" depends="check-deploy-properties, banner">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${classes.dir}"/>
+	</target>
+
+	<target name="resolve" depends="init">
+		<ivy:retrieve type="jar" />
+	</target>
+
+	<target name="clean-all" depends="clean, clean-cache" />
+
+	<target name="clean-cache">
+		<ivy:cleancache />
+	</target>
+	
+	<target name="deploy" depends="war">
+		<copy todir="${env.tomcat_dir}/webapps">
+			<fileset file="${build.dir}/usedcarstoreservlet.war" />
+		</copy>
+	</target>
+	
+	<target name="war" depends="compile">
+		<copy todir="${build.dir}/web">
+			<fileset dir="web" />
+		</copy>
+		<war destfile="${build.dir}/usedcarstoreservlet.war" basedir="${build.dir}/web">
+			<classes dir="${classes.dir}"/>
+		</war>		
+	</target>
+
+	<target name="compile" depends="init, resolve">
+		<javac includeantruntime="false" 
+			srcdir="${src.dir}"
+			destdir="${classes.dir}"
+			debug="${debug}">
+			<classpath>
+				<fileset dir="${lib.dir}" includes="*.jar"/>
+				<fileset file="${env.tomcat_dir}/lib/*.jar" />
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="clean" depends="banner">
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<target name="banner">
+		<echo>*** ${basedir} ***</echo>
+	</target>
+</project>

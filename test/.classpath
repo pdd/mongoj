@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="service-impl/|service/" including="com/" kind="src" path="src/java"/>
+	<classpathentry kind="src" path="src/java/service-impl"/>
+	<classpathentry kind="src" path="src/java/service"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.6.jar"/>
+	<classpathentry kind="lib" path="lib/freemarker-2.3.16.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-asl-1.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-mapper-asl-1.8.0.jar"/>
+	<classpathentry kind="lib" path="lib/jalopy-1.5rc3.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
+	<classpathentry kind="lib" path="lib/mongo-java-driver-2.5.3.jar"/>
+	<classpathentry kind="lib" path="lib/mongoj-0.1.jar"/>
+	<classpathentry kind="lib" path="lib/mongoj-tools-0.1.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.beans-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.context-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.core-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/qdox-1.12.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-simple-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.8.2.jar"/>
+	<classpathentry kind="output" path="build"/>
+</classpath>
