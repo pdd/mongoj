@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
-  <welcome-file-list>
-    <welcome-file>login.jsp</welcome-file>
-  </welcome-file-list>
-  <display-name>UsedCarStoreServlet</display-name>
-  <servlet>
-    <description></description>
-    <display-name>UsedCarStoreServlet</display-name>
-    <servlet-name>UsedCarStoreServlet</servlet-name>
-    <servlet-class>org.mongoj.samples.servlet.UsedCarStoreServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>UsedCarStoreServlet</servlet-name>
-    <url-pattern>/store/*</url-pattern>
-  </servlet-mapping>
-  <session-config>
-    <session-timeout>30</session-timeout>
-  </session-config>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<welcome-file-list>
+		<welcome-file>login.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/classes/META-INF/spring.xml</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<display-name>UsedCarStoreServlet</display-name>
+
+	<servlet>
+		<description></description>
+		<display-name>UsedCarStoreServlet</display-name>
+		<servlet-name>UsedCarStoreServlet</servlet-name>
+		<servlet-class>org.mongoj.samples.servlet.UsedCarStoreServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>UsedCarStoreServlet</servlet-name>
+		<url-pattern>/store/*</url-pattern>
+	</servlet-mapping>
+
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
 </web-app>
