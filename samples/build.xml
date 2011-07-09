@@ -1,0 +1,20 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="samples" 
+	basedir="." default="package">
+	
+	<property environment="env" />
+		
+	<target name="generate-bundle">
+		<zip basedir="PortletWithService"
+			includes="portlet-stub/**"
+			destfile="project-stubs.zip" 
+			update="true" />
+		<zip basedir="ServletWithService"
+			includes="servlet-stub/**"
+			destfile="project-stubs.zip" 
+			update="true" />
+	</target>
+
+	<target name="banner">
+		<echo>*** ${basedir} ***</echo>
+	</target>
+</project>
