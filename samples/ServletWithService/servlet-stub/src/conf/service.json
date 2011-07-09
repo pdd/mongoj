@@ -1,0 +1,20 @@
+{
+	"author" : "Firstname Lastname",
+	"package" : "com.example.demo",
+	 
+	"documents" : [
+		{	"name" :  "MyEntity",
+			"collection" : "myentities",
+			"fields" :  [
+				{	
+					"name" : "x",
+				 	"type" : "String"
+				},
+				{ 	
+					"name" : "y",
+					"type" : "String"
+				}
+			]
+		}
+	]
+}
