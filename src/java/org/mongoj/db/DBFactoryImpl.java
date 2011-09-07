@@ -72,11 +72,22 @@ public class DBFactoryImpl implements DBFactory {
 			if (!StringUtils.isBlank(propertiesFileName)) {
 				try {
 					//override the base/default properties
-					inStream = this.getClass()
-						.getClassLoader()
-						.getResourceAsStream(propertiesFileName);
-		
-					_properties.load(inStream);
+					inStream = this.getClass().getResourceAsStream(
+						propertiesFileName);
+					
+					if (inStream == null) {
+						inStream = Thread.currentThread()
+							.getContextClassLoader()
+							.getResourceAsStream(propertiesFileName);
+					}
+					
+					if (inStream != null) {
+						_properties.load(inStream);
+					}
+					else {
+						_log.error(
+							"Unable to load {}", propertiesFileName);
+					}
 				}
 				catch (IOException e) {
 					_log.error(
