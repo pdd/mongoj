@@ -142,7 +142,7 @@
 			overwrite="true">
 			<fileset dir="${src.dir}/custom/com/example/demo/model/impl" />
 		</copy>
-		<copy todir="${service.impl.dir}/com/example/demo/model" 
+		<copy todir="${service.dir}/com/example/demo/model" 
 			overwrite="true">
 			<fileset file="${src.dir}/custom/com/example/demo/model/RegisteredDriver.java" />
 		</copy>
