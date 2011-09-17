@@ -24,14 +24,11 @@ package org.mongoj.db;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
-import java.util.Arrays;
 import java.util.Properties;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -69,9 +66,10 @@ public class DBFactoryImpl implements DBFactory {
 
 			_properties.load(inStream);
 			
-			if (!StringUtils.isBlank(propertiesFileName)) {
+			//override the base/default properties
+			if (propertiesFileName != null &&
+				propertiesFileName.length() > 0 ) {
 				try {
-					//override the base/default properties
 					inStream = this.getClass().getResourceAsStream(
 						propertiesFileName);
 					
@@ -94,15 +92,16 @@ public class DBFactoryImpl implements DBFactory {
 						"Unable to override default mogoj properties", e);
 				}
 			}
-						
-			if (StringUtils.isBlank(_properties.getProperty(MONGOJ_URI))) {
+				
+			String uri = _properties.getProperty(MONGOJ_URI).trim();
+			
+			if (uri == null || uri.length() == 0) {
 				_log.error("Invalid {}", MONGOJ_URI);
 				
 				return;
 			}
 			
-			MongoURI mongoURI = 
-				new MongoURI(_properties.getProperty(MONGOJ_URI));
+			MongoURI mongoURI = new MongoURI(uri);
 						
 			_db = mongoURI.connectDB();
 			
@@ -170,7 +169,7 @@ public class DBFactoryImpl implements DBFactory {
 
 				String valueString = _indexes.getProperty(name);
 				
-				if (StringUtils.isBlank(valueString)) {
+				if (valueString == null || valueString.trim().length() == 0) {
 					_log.info(
 						"Skipping index generation for {}, keys undefined.",
 							name);
