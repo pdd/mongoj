@@ -13,10 +13,6 @@ import org.mongoj.model.BaseModel;
  * Generated file - Do NOT edit. It will be overwritten at next ServiceBuilder iteration.
  */
 public interface ${document.name}Model extends BaseModel<${document.name}> {
-	
-	public String getId();
-
-	public void setId(String id);
 
 	<#list fields as field>
 		<#if field.type == "Object">

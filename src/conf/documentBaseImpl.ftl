@@ -67,14 +67,6 @@ public class ${document.name}ModelImpl extends BaseModelImpl<${document.name}>
 		</#list>
 	}
 
-	public String getId() {
-		return _id;
-	}
-
-	public void setId(String id) {
-		_id = id;
-	}
-
 	<#list fields as field>
 		<#if field.type == "Object">
 			${serviceBuilder.getEmbeddedClass(field)}
@@ -197,7 +189,6 @@ public class ${document.name}ModelImpl extends BaseModelImpl<${document.name}>
 		return toMap().toString();
 	}
 	
-	private String _id;
 	<#list fields as field>
 		<#if field.type == "Object">
 			private ${field.typeName} _${field.name} = new ${field.typeName}Impl();

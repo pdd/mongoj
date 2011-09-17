@@ -23,7 +23,9 @@ package org.mongoj.model.impl;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +38,14 @@ import org.mongoj.model.BaseModel;
  */
 public abstract class BaseModelImpl<T> implements BaseModel<T> {
 
-	private static final long serialVersionUID = 1L;
+	public static final String ID = "_id";
+	public static final String COMMA = ",";
+	public static final String SINGLE_QUOTE = "'";
+	public static final String COLON = " : ";
+	public static final String OPEN_BRACE = "{";
+	public static final String CLOSE_BRACE = "}";
+	public static final String OPEN_BRACKET = "[";
+	public static final String CLOSE_BRACKET = "]";
 	
 	public Map<String, Object> setMap = new HashMap<String, Object>();
 	public Map<String, List<Object>> appendMap = 
@@ -45,12 +54,21 @@ public abstract class BaseModelImpl<T> implements BaseModel<T> {
 		new HashMap<String, List<Object>>();
 	public Map<String, List<Object>> removeMap = 
 		new HashMap<String, List<Object>>();
+	
 	public boolean isNew() {
 		return _new;
 	}
 	
 	public void setNew(boolean n) {
 		_new = n;
+	}
+	
+	public String getId() {
+		return _id;
+	}
+	
+	public void setId(String id) {
+		_id = id;
 	}
 	
 	/**
@@ -155,6 +173,95 @@ public abstract class BaseModelImpl<T> implements BaseModel<T> {
 		}		
 	}
 
-	private boolean _new = false;
+	public String toJSON() {
+		StringBuilder jsonSB = new StringBuilder();
+		
+		Map<String, Object> map = toMap();
+		
+		map.put(ID, _id);
+		
+		_appendJSON(jsonSB, map);
+		
+		return jsonSB.toString();
+	}
+
+	private void _appendJSON(StringBuilder sb, Map<String, Object> map) {
+		sb.append(OPEN_BRACE);
+		
+		Iterator<String> keys = map.keySet().iterator();
+			
+		while(keys.hasNext()) {
+			String key = keys.next();
+			
+			Object object = map.get(key);
+
+			sb.append(SINGLE_QUOTE)
+				.append(key)
+				.append(SINGLE_QUOTE)
+				.append(COLON);
+
+			_appendJSON(sb, object);
+			
+			if (keys.hasNext()) {
+				sb.append(COMMA);
+			}
+		}
+		
+		sb.append(CLOSE_BRACE);
+	}
 	
+	private void _appendJSON(StringBuilder sb, List<Object> list) {
+		sb.append(OPEN_BRACKET);
+		
+		Iterator<Object> objects = list.iterator();
+		
+		while(objects.hasNext()) {			
+			Object object = objects.next();
+			
+			_appendJSON(sb, object);
+			
+			if (objects.hasNext()) {
+				sb.append(COMMA);
+			}
+		}
+		
+		sb.append(CLOSE_BRACKET);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void _appendJSON(StringBuilder sb, Object object) {
+		if (object instanceof Map) {
+			_appendJSON(sb, (Map<String, Object>)object);
+		}
+		else if (object instanceof List) {
+			_appendJSON(sb, (List<Object>)object);
+		}
+		else if (object instanceof byte[]) {
+			sb.append(SINGLE_QUOTE)
+				.append(new sun.misc.BASE64Encoder().encode((byte[])object))
+				.append(SINGLE_QUOTE);
+		}
+		else if (object instanceof Date) {
+			sb.append(SINGLE_QUOTE)
+				.append(((Date)object).toString())
+				.append(SINGLE_QUOTE);
+		}
+		else {
+			if (object instanceof String) {
+				sb.append(SINGLE_QUOTE);
+			}
+	
+			sb.append(object.toString());
+			
+			if (object instanceof String) {
+				sb.append(SINGLE_QUOTE);
+			}
+		}
+	}
+	
+	protected String _id = null;
+	
+	private boolean _new = false;
+
+	private static final long serialVersionUID = 1L;
 }

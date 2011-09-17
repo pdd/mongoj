@@ -19,28 +19,34 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
-package org.mongoj.model;
+package com.example.demo;
 
-import java.io.Serializable;
-import java.util.Map;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Date;
+
+import org.mongoj.exception.SystemException;
+import org.mongoj.exception.UpdateException;
+
+import com.example.demo.model.Car;
+import com.example.demo.model.User;
+import com.example.demo.service.CarLocalServiceUtil;
+import com.example.demo.service.UserLocalServiceUtil;
 
 /**
  * 
  * @author Prashant Dighe
  *
  */
-public interface BaseModel<T> extends Serializable {
-
-	public String getId();
-	
-	public void setId(String id);
-	
-	public boolean isNew();
-	
-	public void setNew(boolean n);
-	
-	public Map<String, Object> toMap();
-	
-	public String toJSON();
+public class ToJSONTest extends TestBase {
+		
+	@org.junit.Test
+	public void toJSON() throws SystemException, UpdateException {
+		Car car = createCar(1);
+		
+		System.out.println(car.toJSON());
+		
+		assertTrue(true);
+	}
 
 }

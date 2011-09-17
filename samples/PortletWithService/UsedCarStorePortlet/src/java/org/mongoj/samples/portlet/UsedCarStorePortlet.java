@@ -105,7 +105,7 @@ public class UsedCarStorePortlet extends GenericPortlet {
 				
 				return;
 			}
-			else if (action.equals("saveCar")) {				
+			else if (action.equals("saveCar")) {	
 				JSONObject jsonResponse = new JSONObject();
 
 				try {
