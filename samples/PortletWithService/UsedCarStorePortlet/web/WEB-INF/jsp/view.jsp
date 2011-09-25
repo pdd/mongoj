@@ -61,7 +61,7 @@ var usedcar = {
 		<tr>
 			<td align="left" width="10%">
 				<img class="thumbnail" src="data:image/png;base64,%imageBinData%" alt="Thumbnail" />
-				<input type="button" value="Like" onClick="likeCar(%vin%)" />
+				<input type="button" value="Like" onClick='likeCar("%vin%")' />
 			</td>
 			<td width="10%">
 				<table>

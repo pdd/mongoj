@@ -34,10 +34,6 @@ import java.util.Map;
  * Generated file - Do NOT edit. It will be overwritten at next ServiceBuilder iteration.
  */
 public interface UserModel extends BaseModel<User> {
-	public String getId();
-
-	public void setId(String id);
-
 	public long getUserId();
 
 	public void setUserId(long userId);

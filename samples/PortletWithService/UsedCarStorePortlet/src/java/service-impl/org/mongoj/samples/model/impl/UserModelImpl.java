@@ -68,14 +68,6 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 		_followedUsers = (List<String>)map.get("followedUsers");
 	}
 
-	public String getId() {
-		return _id;
-	}
-
-	public void setId(String id) {
-		_id = id;
-	}
-
 	public long getUserId() {
 		return _userId;
 	}
@@ -433,7 +425,6 @@ public class UserModelImpl extends BaseModelImpl<User> implements UserModel {
 		return toMap().toString();
 	}
 
-	private String _id;
 	private long _userId;
 	private String _firstName;
 	private String _lastName;

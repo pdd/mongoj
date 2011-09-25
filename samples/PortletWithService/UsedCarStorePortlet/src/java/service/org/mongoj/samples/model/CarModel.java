@@ -34,10 +34,6 @@ import java.util.Map;
  * Generated file - Do NOT edit. It will be overwritten at next ServiceBuilder iteration.
  */
 public interface CarModel extends BaseModel<Car> {
-	public String getId();
-
-	public void setId(String id);
-
 	public String getMake();
 
 	public void setMake(String make);

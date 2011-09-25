@@ -88,14 +88,6 @@ public class CarModelImpl extends BaseModelImpl<Car> implements CarModel {
 		_likes = (Integer)map.get("likes");
 	}
 
-	public String getId() {
-		return _id;
-	}
-
-	public void setId(String id) {
-		_id = id;
-	}
-
 	public String getMake() {
 		return _make;
 	}
@@ -458,7 +450,6 @@ public class CarModelImpl extends BaseModelImpl<Car> implements CarModel {
 		return toMap().toString();
 	}
 
-	private String _id;
 	private String _make;
 	private String _model;
 	private String _style;
