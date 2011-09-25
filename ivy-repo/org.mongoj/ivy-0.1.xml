@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-	<info organisation="org.mongoj" module="mongoj" revision="0.1" status="integration" publication="20110704190436"/>
+	<info organisation="org.mongoj" module="mongoj" revision="0.1" status="integration" publication="20110925103552"/>
 
 	<configurations>
 		<conf name="compile"/>
